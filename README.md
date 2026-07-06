@@ -31,4 +31,3 @@ To verify the production build:
 ```bash
 npm run build
 ```
-
