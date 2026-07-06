@@ -122,9 +122,9 @@ export default function Home() {
         <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         
-        <div className="w-full overflow-hidden flex gap-6">
+        <div className="w-full overflow-hidden flex relative">
           {/* Main moving track */}
-          <div className="animate-marquee flex items-center gap-6 pr-6">
+          <div className="animate-marquee flex items-center gap-6 pr-6 shrink-0">
             {marqueeItems.map((item, idx) => (
               <div 
                 key={`${item.name}-track1-${idx}`} 
@@ -147,7 +147,7 @@ export default function Home() {
           </div>
 
           {/* Sibling duplicate moving track for seamless endless scrolling */}
-          <div className="animate-marquee flex items-center gap-6 pr-6" aria-hidden="true">
+          <div className="animate-marquee flex items-center gap-6 pr-6 shrink-0" aria-hidden="true">
             {marqueeItems.map((item, idx) => (
               <div 
                 key={`${item.name}-track2-${idx}`} 
