@@ -86,6 +86,43 @@ export async function POST(request: Request) {
     );
   }
 }
+export async function PUT(request: Request) {
+  try {
+    const { id, name, url, description, category_id, sub_category_id, logo_url, image_url } = await request.json();
+    if (!id || !name || !url || !category_id) {
+      return NextResponse.json({ error: "id, name, url, and category_id are required" }, { status: 400 });
+    }
+
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+
+    const { data, error } = await supabase
+      .from("tools")
+      .update({
+        name,
+        url,
+        description,
+        category_id,
+        sub_category_id: sub_category_id || null,
+        logo_url,
+        image_url
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (err: unknown) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(request: Request) {
   try {

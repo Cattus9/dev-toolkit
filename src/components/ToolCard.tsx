@@ -1,14 +1,15 @@
 "use client";
 
-import { ExternalLink, Trash2, Globe } from "lucide-react";
+import { ExternalLink, Trash2, Globe, Edit3 } from "lucide-react";
 import type { Tool } from "@/types/database";
 
 interface ToolCardProps {
   tool: Tool;
   onDelete: (id: string) => void;
+  onEdit: (tool: Tool) => void;
 }
 
-export function ToolCard({ tool, onDelete }: ToolCardProps) {
+export function ToolCard({ tool, onDelete, onEdit }: ToolCardProps) {
   // Use a fallback domain name if no title
   const domain = new URL(tool.url).hostname;
 
@@ -83,13 +84,12 @@ export function ToolCard({ tool, onDelete }: ToolCardProps) {
               </span>
             )}
             {tool.sub_categories?.name && (
-              <span className="text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-accent/15 text-accent border border-accent/20">
+              <span className="text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-accent/20 text-accent-foreground border border-accent/30">
                 {tool.sub_categories.name}
               </span>
             )}
           </div>
         </div>
-
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-3 mt-3 border-t border-border/60">
           <a
@@ -101,14 +101,24 @@ export function ToolCard({ tool, onDelete }: ToolCardProps) {
             Visit Website <ExternalLink className="h-3.5 w-3.5" />
           </a>
 
-          <button
-            onClick={() => onDelete(tool.id)}
-            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
-            title="Delete bookmark"
-            type="button"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => onEdit(tool)}
+              className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+              title="Edit details"
+              type="button"
+            >
+              <Edit3 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onDelete(tool.id)}
+              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
+              title="Delete bookmark"
+              type="button"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

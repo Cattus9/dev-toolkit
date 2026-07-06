@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Shell } from "@/components/Shell";
 import { ToolCard } from "@/components/ToolCard";
 import { AddToolForm } from "@/components/AddToolForm";
+import { EditToolModal } from "@/components/EditToolModal";
 import type { Tool, Category, SubCategory } from "@/types/database";
 import { 
   FolderPlus, 
@@ -26,12 +27,12 @@ export function DashboardContent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingTool, setEditingTool] = useState<Tool | null>(null);
   
   // Filter/Search states
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>("all");
-
   async function fetchData() {
     try {
       setLoading(true);
@@ -242,7 +243,12 @@ export function DashboardContent() {
                           
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                             {toolsInCat.map((tool) => (
-                              <ToolCard key={tool.id} tool={tool} onDelete={handleDelete} />
+                              <ToolCard
+                                key={tool.id}
+                                tool={tool}
+                                onDelete={handleDelete}
+                                onEdit={(t) => setEditingTool(t)}
+                              />
                             ))}
                           </div>
                         </div>
@@ -252,7 +258,12 @@ export function DashboardContent() {
                     /* Case 2: Filter is a specific Category -> Simple grid display */
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                       {filteredTools.map((tool) => (
-                        <ToolCard key={tool.id} tool={tool} onDelete={handleDelete} />
+                        <ToolCard
+                          key={tool.id}
+                          tool={tool}
+                          onDelete={handleDelete}
+                          onEdit={(t) => setEditingTool(t)}
+                        />
                       ))}
                     </div>
                   )}
@@ -270,7 +281,12 @@ export function DashboardContent() {
                         {filteredTools
                           .filter(t => !categories.some(c => c.id === t.category_id))
                           .map((tool) => (
-                            <ToolCard key={tool.id} tool={tool} onDelete={handleDelete} />
+                            <ToolCard
+                              key={tool.id}
+                              tool={tool}
+                              onDelete={handleDelete}
+                              onEdit={(t) => setEditingTool(t)}
+                            />
                           ))}
                       </div>
                     </div>
@@ -311,6 +327,18 @@ export function DashboardContent() {
           </div>
         )}
       </div>
+      {editingTool && (
+        <EditToolModal
+          tool={editingTool}
+          categories={categories}
+          subCategories={subCategories}
+          onClose={() => setEditingTool(null)}
+          onSuccess={() => {
+            setEditingTool(null);
+            fetchData();
+          }}
+        />
+      )}
     </Shell>
   );
 }
